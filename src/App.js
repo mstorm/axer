@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import './App.css';
 import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
@@ -6,7 +7,17 @@ import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
  * 용의 보물 대전장의 황금용 토벌에 참가하여 얻은 전리품입니다.<br><br><color=#fee6ac>기본 : 에메랄드 6개 획득</color><br><br>다음 중 <color=#fee6ac>1개</color> 랜덤 획득<br><br>1. 화려한 장비 상자 2개<br>2. 연마석 상자 1개<br>3. 강화 보호권 1개<br>4. 승급석 상자 2개<br>5. 희귀 정수 상자 3개<br>6. 영웅 정수 상자 2개<br>7. 10만~1000만 골드 상자 3개<br>8. 빛나는 가루 3개<br>9. 빛나는 깃대 1개<br>10. 생명의 돌 1개<br>11. 암흑의 돌 1개<br>12. 날카로운 이빨 1개
  */
 
-const compose = (text, color) => color ? `<color=${color}>${text}</color>` : text;
+const compose = (text, color) => {
+  if (_.isEmpty(_.trim(text))) {
+    return '';
+  }
+
+  if (_.isEmpty(color)) {
+    return text;
+  }
+
+  return `<color=${color}>${text}</color>`;
+};
 
 const inputs = [{
   name: 'desc',
@@ -54,11 +65,9 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state);
-
-    const text = inputs.map(input => input.name).map(name => this.state[name]).filter(o => o).reduce((text, current) => {
+    const text = _.chain(inputs).map(input => input.name).map(name => this.state[name]).filter(o => !_.isEmpty(o)).reduce((text, current) => {
       return text ? `${text}<br><br>${current}` : current;
-    }, '');
+    }, '').value();
 
     return (
       <div className="App">
