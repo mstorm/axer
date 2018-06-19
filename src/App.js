@@ -19,6 +19,21 @@ const compose = (text, color) => {
   return `<color=${color}>${text}</color>`;
 };
 
+const nl2br = (text, numeric) => {
+    let items = _.trim(text).split("\n");
+    if (numeric && items.length > 1) {
+        items = items.map((o, i) => {
+            if (/^[0-9]+(\..*)?/.test(o)) {
+                return o;
+            }
+
+            return `${i + 1}. ${o}`;
+        });
+    }
+
+    return items.join("<br>");
+};
+
 const inputs = [{
   name: 'desc',
   label: '아이템 설명',
@@ -51,7 +66,7 @@ class App extends Component {
 
   handleChange(e) {
     const color = e.target.getAttribute('color');
-    const text = e.target.value.replace(/\n/g, '<br>');
+    const text = nl2br(e.target.value, e.target.name === 'optional-reward');
 
     const newState = {};
     newState[e.target.name] = compose(text, color);
