@@ -23,7 +23,7 @@ const nl2br = (text, numeric) => {
     let items = _.trim(text).split("\n");
     if (numeric && items.length > 1) {
         items = items.map((o, i) => {
-            if (/^[0-9]+(\..*)?/.test(o)) {
+            if (/^[0-9]+\..+/.test(o)) {
                 return o;
             }
 
